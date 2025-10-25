@@ -1,0 +1,5 @@
+Flask
+gunicorn
+python-dotenv
+Flask_SQLAlchemy
+reportlab
