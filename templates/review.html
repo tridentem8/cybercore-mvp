@@ -4,7 +4,8 @@
 
 <p>
   <b>{{ vendor.legal_name }}</b> ({{ vendor.email }})<br>
-  Tier: {{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}<br>
+  Tier:
+  {{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}<br>
   Amount due: <b>${{ price }}</b>
 </p>
 

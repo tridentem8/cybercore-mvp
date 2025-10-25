@@ -1,85 +1,29 @@
-cat > templates/base.html <<'EOF'
-<!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CyberCore FIFA-Ready</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head><body class="p-4">
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CyberCore FIFA Compliance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body class="p-4">
 <div class="container">
-<h3>✅ CyberCore <span class="text-muted">FIFA-Ready</span></h3><hr>
-{% with m=get_flashed_messages(with_categories=true) %}{% if m %}{% for c,t in m %}
-<div class="alert alert-{{ 'danger' if c=='danger' else c }}">{{ t }}</div>
-{% endfor %}{% endif %}{% endwith %}
-{% block content %}{% endblock %}
-<hr><div class="text-muted small">© CyberCore</div>
-</div></body></html>
-EOF
+  <h3>✅ CyberCore <span class="text-muted">FIFA-Ready</span></h3>
+  <hr>
 
-cat > templates/index.html <<'EOF'
-{% extends "base.html" %}{% block content %}
-<h4>Get FIFA-Ready in 72 hours</h4>
-<form action="/intake" method="post" class="row g-3">
-  <div class="col-md-6"><label class="form-label">Legal name*</label><input name="legal_name" class="form-control" required></div>
-  <div class="col-md-6"><label class="form-label">Email*</label><input name="email" type="email" class="form-control" required></div>
-  <div class="col-12"><label class="form-label">Which best describes you?</label>
-    <div class="form-check"><input class="form-check-input" type="radio" name="vendor_type" value="local" id="t1" checked><label for="t1" class="form-check-label">Local vendor (City-Ready $1,000)</label></div>
-    <div class="form-check"><input class="form-check-input" type="radio" name="vendor_type" value="sub" id="t2"><label for="t2" class="form-check-label">Subcontractor with a prime</label></div>
-    <div class="form-check"><input class="form-check-input" type="radio" name="vendor_type" value="prime" id="t3"><label for="t3" class="form-check-label">Prime/Tier-1</label></div>
-  </div>
-  <div class="col-12" id="kyb" style="display:none">
-    <label class="form-label">Include KYC/KYB? (+$500)</label>
-    <div class="form-check"><input class="form-check-input" type="radio" name="kybkyc" value="yes" id="k1"><label for="k1" class="form-check-label">Yes — Prime-Ready</label></div>
-    <div class="form-check"><input class="form-check-input" type="radio" name="kybkyc" value="no" id="k2" checked><label for="k2" class="form-check-label">No — City-Ready</label></div>
-  </div>
-  <div class="col-12"><button class="btn btn-primary">Continue</button></div>
-</form>
-<script>
-function toggle(){const v=document.querySelector('input[name="vendor_type"]:checked').value;
-document.getElementById('kyb').style.display=(v==='sub'||v==='prime')?'block':'none';}
-document.querySelectorAll('input[name="vendor_type"]').forEach(r=>r.addEventListener('change',toggle));toggle();
-</script>
-{% endblock %}
-EOF
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% if msgs %}
+      {% for cat, text in msgs %}
+        <div class="alert alert-{{ 'danger' if cat=='danger' else cat }}">{{ text }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-cat > templates/upload.html <<'EOF'
-{% extends "base.html" %}{% block content %}
-<h4>Upload documents — {{ vendor.legal_name }}</h4>
-<p>Price: <b>${{ price }}</b> — Tier: {{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}</p>
-<form method="post" enctype="multipart/form-data" class="row g-3">
-  <div class="col-md-6"><label class="form-label">Insurance</label><input type="file" name="insurance" class="form-control"></div>
-  <div class="col-md-6"><label class="form-label">License</label><input type="file" name="license" class="form-control"></div>
-  <div class="col-md-6"><label class="form-label">W-9</label><input type="file" name="w9" class="form-control"></div>
-  <div class="col-md-6"><label class="form-label">Policy</label><input type="file" name="policy" class="form-control"></div>
-  <div class="col-12"><button class="btn btn-primary">Upload</button>
-  <a class="btn btn-link" href="{{ url_for('review', vendor_id=vendor.id) }}">Skip</a></div>
-</form>
-{% endblock %}
-EOF
+  {% block content %}{% endblock %}
 
-cat > templates/review.html <<'EOF'
-{% extends "base.html" %}{% block content %}
-<h4>Review & Payment — {{ vendor.legal_name }}</h4>
-<p>Current score: <b>{{ score }}/100</b>. Upload all four docs to reach 100.</p>
-<p>Amount due: <b>${{ price }}</b></p>
-<p><i>Payment is simulated in MVP — an admin will mark it paid.</i></p>
-<p>Next: after payment + complete docs, your verify link:<br>
-<code>{{ request.host_url }}verify/{{ vendor.id }}</code></p>
-<a class="btn btn-secondary" href="{{ url_for('upload', vendor_id=vendor.id) }}">Back to uploads</a>
-{% endblock %}
-EOF
+  <hr>
+  <div class="text-muted small">© CyberCore Compliance</div>
+</div>
+</body>
+</html>
 
-cat > templates/verify.html <<'EOF'
-{% extends "base.html" %}{% block content %}
-<h4>Vendor Verification</h4>
-<table class="table">
-<tr><th>Vendor</th><td>{{ vendor.legal_name }}</td></tr>
-<tr><th>Email</th><td>{{ vendor.email }}</td></tr>
-<tr><th>Tier</th><td>{{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}</td></tr>
-<tr><th>Paid</th><td>{{ 'Yes' if vendor.paid else 'No' }}</td></tr>
-<tr><th>Score</th><td>{{ vendor.score }}/100</td></tr>
-<tr><th>Status</th><td>{% if vendor.verified %}<span class="badge bg-success">VERIFIED</span>{% else %}<span class="badge bg-secondary">Pending</span>{% endif %}</td></tr>
-</table>
-{% if vendor.verified %}
-<a class="btn btn-success" href="{{ url_for('cert', vendor_id=vendor.id) }}">Download Certificate</a>
-{% endif %}
-{% endblock %}
-EOF
