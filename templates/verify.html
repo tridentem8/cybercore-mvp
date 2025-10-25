@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Vendor Status</h4>
+
+<table class="table">
+  <tr><th>Vendor</th><td>{{ vendor.legal_name }}</td></tr>
+  <tr><th>Email</th><td>{{ vendor.email }}</td></tr>
+  <tr><th>Tier</th><td>{{ tier }}</td></tr>
+  <tr><th>Paid</th><td>{{ 'Yes' if vendor.paid else 'No' }}</td></tr>
+  <tr><th>Score</th><td>{{ vendor.score }}/100</td></tr>
+  <tr>
+    <th>Status</th>
+    <td>
+      {% if vendor.verified %}
+        <span class="badge bg-success">VERIFIED</span>
+      {% else %}
+        <span class="badge bg-secondary">Pending</span>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+
+{% if vendor.verified %}
+<a class="btn btn-success" href="{{ url_for('cert_pdf', vendor_id=vendor.id) }}">
+  Download Compliance Certificate PDF
+</a>
+{% else %}
+<p class="text-muted">This vendor is not fully cleared yet.</p>
+{% endif %}
+{% endblock %}

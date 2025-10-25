@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Upload required documents</h4>
+
+<p>
+  <b>{{ vendor.legal_name }}</b><br>
+  Tier: {{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}<br>
+  Compliance fee: <b>${{ price }}</b>
+</p>
+
+<form method="post" enctype="multipart/form-data" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Insurance (COI)</label>
+    <input type="file" name="insurance" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Business License</label>
+    <input type="file" name="license" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">W-9 / Tax Doc</label>
+    <input type="file" name="w9" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Safety / Security Policy</label>
+    <input type="file" name="policy" class="form-control">
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Upload</button>
+    <a class="btn btn-link" href="{{ url_for('review', vendor_id=vendor.id) }}">
+      Skip for now
+    </a>
+  </div>
+</form>
+{% endblock %}

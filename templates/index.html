@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Get FIFA-Ready in 72 hours</h4>
+<p class="text-muted">
+  Vendors supporting World Cup events: Get pre-cleared for insurance, tax docs, safety policy, and (if needed) KYB/KYC checks for primes and city contracts.
+</p>
+
+<form action="/intake" method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Legal Business Name*</label>
+    <input name="legal_name" class="form-control" required>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Email*</label>
+    <input name="email" type="email" class="form-control" required>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Phone</label>
+    <input name="phone" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Service / Category (ex: catering, private security, shuttle, cleaning)</label>
+    <input name="category" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">City</label>
+    <input name="city" class="form-control" placeholder="Dallas">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">State</label>
+    <input name="state" class="form-control" placeholder="TX">
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Which best describes you?</label>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="vendor_type" value="local" id="t1" checked>
+      <label for="t1" class="form-check-label">
+        Local vendor / city supplier (City-Ready $1,000)
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="vendor_type" value="sub" id="t2">
+      <label for="t2" class="form-check-label">
+        Subcontractor under a prime
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="vendor_type" value="prime" id="t3">
+      <label for="t3" class="form-check-label">
+        Prime / Tier-1 vendor
+      </label>
+    </div>
+  </div>
+
+  <div class="col-12" id="kybwrap" style="display:none">
+    <label class="form-label">Prime-Ready add-on: KYB/KYC background check (+$500)</label>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="kybkyc" value="yes" id="k1">
+      <label for="k1" class="form-check-label">Yes — Prime-Ready certification</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="kybkyc" value="no" id="k2" checked>
+      <label for="k2" class="form-check-label">No — City-Ready only</label>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary btn-lg w-100">Continue</button>
+  </div>
+</form>
+
+<script>
+function toggleTier() {
+  const v = document.querySelector('input[name="vendor_type"]:checked').value;
+  document.getElementById('kybwrap').style.display =
+    (v === 'sub' || v === 'prime') ? 'block' : 'none';
+}
+document.querySelectorAll('input[name="vendor_type"]').forEach(r => {
+  r.addEventListener('change', toggleTier);
+});
+toggleTier();
+</script>
+{% endblock %}

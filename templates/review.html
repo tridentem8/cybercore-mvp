@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Next Steps</h4>
+
+<p>
+  <b>{{ vendor.legal_name }}</b> ({{ vendor.email }})<br>
+  Tier: {{ 'Prime-Ready (KYC/KYB)' if (vendor.vendor_type in ['sub','prime'] and vendor.kybkyc) else 'City-Ready' }}<br>
+  Amount due: <b>${{ price }}</b>
+</p>
+
+<p>
+  Current score: <b>{{ score }}/100</b><br>
+  (100 means: all four docs uploaded → you become VERIFIED)
+</p>
+
+<p>After payment and review, you get:</p>
+<ul>
+  <li>A public verification link any prime/city can check</li>
+  <li>A downloadable compliance certificate PDF with VERIFIED badge</li>
+</ul>
+
+<p>Your verification link will be:<br>
+<code>{{ request.host_url }}verify/{{ vendor.id }}</code></p>
+
+<a class="btn btn-secondary" href="{{ url_for('upload_docs', vendor_id=vendor.id) }}">
+  Add / fix documents
+</a>
+{% endblock %}
